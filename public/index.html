@@ -1,0 +1,31 @@
+<html>
+    <head>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <!-- As a heading -->
+            <nav class="navbar navbar-light bg-light">
+                <span class="navbar-brand mb-0 h1">Excel to project xml converter.</span>
+            </nav>
+            <div>
+                <form action="/api/login" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">User Name</label>
+                            <input type="text" class="form-control" name="username" id="exampleInputEmail1" >
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" name="password" id="exampleInputPassword1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script>
+        function login(){
+            console.log("login method invoked");
+        }
+    </script>
+</html>
