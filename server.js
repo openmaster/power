@@ -14,7 +14,7 @@ app.use('/welcome', express.static('public/welcome.html'));
 const login = require('./lib/routes/login');
 app.use('/api', login);
 
-const converter = require('./lib/routes/fileConverter');
+const converter = require('./lib/routes/fileUpload');
 app.use('/api', converter);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
