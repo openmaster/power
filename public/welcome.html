@@ -6,7 +6,7 @@
         <div class="container">
             <!-- As a heading -->
             <nav class="navbar navbar-light bg-light">
-                <span class="navbar-brand mb-0 h1">Excel to project xml converter.</span>
+                <span class="navbar-brand mb-0 h1">Excel to project xml converter</span>
             </nav>
             <form action="/api/upload" method="POST" enctype="multipart/form-data">
                 <input class="btn btn-outline-info" type="file" id="myFile" name="uploadedFile" accept="application/vnd.ms-excel">
@@ -14,11 +14,4 @@
             </form>
         </div>
     </body>
-    <script>
-        function processFile(){
-            console.log('hitting processfile ');
-            const file = document.getElementById("myFile");
-            console.log(file);
-        }
-    </script>
 </html>

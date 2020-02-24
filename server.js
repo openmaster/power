@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.use('/', express.static('public'))
-app.use('/welcome', express.static('public/welcome.html'));
+app.use('/ZeTuWGmnSDfdsghHLKhjkytlQwerEtdHkui', express.static('public/welcome.html'));
 
 
 const login = require('./lib/routes/login');
