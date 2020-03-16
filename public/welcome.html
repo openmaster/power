@@ -1,10 +1,21 @@
 <html>
     <head>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>       
+            <!-- Load React. -->
+            <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+            <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+            
+            <!-- <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script> -->
+            <!-- Load our React component. -->
+
+            <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     </head>    
     <body>
-        <div class="container">
-            <!-- As a heading -->
+        <!-- <div class="container">
+            
             <nav class="navbar navbar-light bg-light">
                 <span class="navbar-brand mb-0 h1">Excel to project xml converter</span>
             </nav>
@@ -12,6 +23,9 @@
                 <input class="btn btn-outline-info" type="file" id="myFile" name="uploadedFile" accept="application/vnd.ms-excel">
                 <button type="submit" class="btn btn-outline-info">Process File</button>
             </form>
-        </div>
+        </div> -->
+        <div class="container" id="com"></div>
+
+        <script type="text/babel" src="js/main.js"></script>
     </body>
 </html>
