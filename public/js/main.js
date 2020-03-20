@@ -121,30 +121,63 @@ class DownloadNShare extends React.Component{
 class CreateProjectFile extends React.Component{
     constructor(props){
         super(props);
-        this.state = {fileContent: null, error: null, fileName: null}
+        this.state = {fileContent: null, error: null, fileName: null, processingReady: false}
         this.uploadFile = this.uploadFile.bind(this);
+        this.fileChange = this.fileChange.bind(this);
+    }
+    showError() {
+        const error = this.state.error;
+        if(error){
+            return(<div className="alert alert-danger mb-2" role="alert">{error.toString()}</div>);
+        }
+    }
+
+    fileChange(){
+        this.setState({fileContent: null});
+        const file = document.getElementById('fileUploder').value;
+        console.log(file)
+        if (file){
+            this.setState({processingReady: true});
+        } else {
+            this.setState({processingReady: false});
+        }
+        console.log(this.state.processingReady)
+    }
+    fileProcessingButton(){
+
+        const status = this.state.processingReady;
+        if(status){
+           return(
+               <button className="btn btn-sm btn-outline-info" placeholder="Select " onClick={this.uploadFile}>Process File</button>
+               );
+        }
+    }
+    DownloadNShareComponent(){
+        const fileContent = this.state.fileContent;
+        if(fileContent){
+            return(<DownloadNShare fileName={this.state.fileName} fileData={this.state.fileContent}/>);
+        }
     }
   
     render(){
         const fileContent = this.state.fileContent;
         let error = this.state.error
+        const processingReady = this.state.processingReady;
         return(
             <div className="container">
                 <form id="myForm" name="myForm">
-                    <input className="form-control-file" type="file" id="fileUploder" name="uploadedFile" accept="application/vnd.ms-excel" multiple={false} /> &nbsp;
+                    <input className="form-control-file" 
+                        type="file" 
+                        id="fileUploder" 
+                        value={this.state.selectedFile}
+                        name="uploadedFile"
+                        accept="application/vnd.ms-excel"
+                        multiple={false} 
+                        onChange={this.fileChange} /> &nbsp;
                 </form>
-               <div>
-                   {(fileContent) ? 
-                    <DownloadNShare fileName={this.state.fileName} fileData={this.state.fileContent}/>
-                    :
-                    <button className="btn btn-sm btn-outline-info" placeholder="Select " onClick={this.uploadFile}>Process File</button>}
-                </div>
-                <div>
-                    {
-                        (error) ? <div className="alert alert-danger" role="alert">{error.toString()}</div> : <div></div>
-                    }
-                </div>
-                
+                {this.fileProcessingButton()}
+                {this.DownloadNShareComponent()}                
+                {this.showError()}
             </div>
         )
     }
@@ -158,11 +191,13 @@ class CreateProjectFile extends React.Component{
         return nam;
     }
     uploadFile(){
+        const fileContent = this.state.fileContent;
         event.preventDefault();
         const file = document.getElementById('myForm');
         const fileName = this.getFileName();
         this.setState({fileName: fileName});
         let formData = new FormData(file);
+        console.log(formData);
         const request = {
             url: '/api/upload',
             method: 'POST',
@@ -187,7 +222,7 @@ class CreateCTs extends React.Component{
             <div>
                 <p>Lets create CT's file</p>
             </div>
-        )        
+        )      
     }
 }
 
