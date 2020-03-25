@@ -40,13 +40,17 @@ class DownloadNShare extends React.Component{
         axios(request).then(result => {
             const previousSharingResults = this.state.sharingResults || [];
             this.setState({uploading: false, sharingResults: previousSharingResults.concat(result.data)})
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log(err.Error);
+            const previousSharingResults = this.state.sharingResults || [];
+            this.setState({uploading: false, sharingResults: previousSharingResults.concat({email:"Error: ", error: "Some error occured."})})
+        });
     }
 
     sharingResult(){
         let results = this.state.sharingResults;
         if(results){
-        const items = results.map((item) => <li className="list-group-item" key={item.email.toString()}> &#10025; {item.email} {(item.error)?<span>&#10006; {item.error}</span>:<span>&#10004;</span>}</li>);
+        const items = results.map((item) => <li className="list-group-item" key={item.email.toString()}> &#10025; {item.email} {(item.error)?<span className="text-danger">&#10006; {item.error}</span>:<span>&#10004;</span>}</li>);
             return(
                 <ul className="list-group">
                     {items}
@@ -218,9 +222,10 @@ class CreateProjectFile extends React.Component{
 
 class CreateCTs extends React.Component{
     render(){
+        
         return(
             <div>
-                <p>Lets create CT's file</p>
+                <CreateCTs/>
             </div>
         )      
     }
