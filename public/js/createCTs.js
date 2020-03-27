@@ -22,30 +22,16 @@ class CreateCTs extends React.Component{
                 'Content-Type':'multipart/form-data'
             }
         }
-
         axios(request).then((result) => {
             this.setState({fileContent: result.data})
         }).catch((err) => {
             this.setState({error: err});
             console.log(err);
         })
-        //const fileContent = this.state.fileContent;
-        //this.setState({fileContent: 'this is my content'})
-        //console.log('hitting upload file');
-
-    }
-
-    FileViewer(){
-        const fileContent = this.state.fileContent
-        return(
-            <div className="container">
-                <h3 className="text-center">Your file Contents</h3>
-                <textarea className="container userFile" readOnly value={fileContent} />
-            </div>
-        );
     }
 
     render(){
+        const fileContent = this.state.fileContent
         return(
             <div className="container">
                 <form id="ctFiles" name="ctFiles">
@@ -53,10 +39,12 @@ class CreateCTs extends React.Component{
                         id="fileUploader"
                         value={this.state.selectedFile}
                         name="uploadedFile"
-                        accept="application/xml" /> &nbsp;
+                        accept="application/xml"
+                        multiple="true" /> &nbsp;
                 </form>
                 <button className="btn btn-sm btn-info" onClick={this.uploadFile}>Upload</button>
-                {this.FileViewer()}                
+                <XmlViewer fileContent={fileContent} />
+
             </div>
         );
     } 
