@@ -6,10 +6,6 @@ class CreateCTs extends React.Component{
         console.log('hitting create ct class constructor');
     }
 
-    fileProcessingButton(){
-        
-    }
-
     uploadFile(){
         event.preventDefault();
         const file = document.getElementById('ctFiles');
@@ -40,12 +36,11 @@ class CreateCTs extends React.Component{
                         value={this.state.selectedFile}
                         name="uploadedFile"
                         accept="application/xml"
-                        multiple="true" /> &nbsp;
+                        onChange={this.uploadFile}
+                        multiple={true} /> &nbsp;
                 </form>
-                <button className="btn btn-sm btn-info" onClick={this.uploadFile}>Upload</button>
                 <XmlViewer fileContent={fileContent} />
-
             </div>
         );
-    } 
+    }
 }
