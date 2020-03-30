@@ -38,9 +38,8 @@ class XmlViewer extends React.Component{
         } else if(fileContent) {
             return(
                 <div className="container">
-                    <button className="btn btn-sm btn-link float-right" onClick={this.downloadFile}>Download</button>
-                    <button className="btn btn-sm btn-link float-right" >Share File</button>                    
-                    <h3 className="text-center">CT File Content</h3>
+                    <button className="btn btn-sm btn-link float-right" onClick={this.downloadFile}>Download</button>                 
+                    <h3 className="text-center">File Content</h3>
                     <textarea className="container userFile" readOnly value={fileContent} />
                 </div>
             );

@@ -10,7 +10,7 @@ class DownloadNShare extends React.Component{
             uploading: false, 
             sharingResults: null
         }
-        this.downloadFile = this.downloadFile.bind(this);
+        
         this.shareFile = this.shareFile.bind(this);
     }
 
@@ -60,7 +60,7 @@ class DownloadNShare extends React.Component{
             return null;
         }
     }
-    sharingButton(sharingOn){
+    sharingComponent(sharingOn){
         let uploading = this.state.uploading;
         if(sharingOn){
             return(
@@ -77,31 +77,14 @@ class DownloadNShare extends React.Component{
             );
         }
     }
-    downloadFile(){
-        const fileName = this.state.fileName;
-        const data = this.state.fileData;
-        if(!fileName || !data){
-            this.setState({error: "Error !! Invalid file name or file content."});
-            return;
-        }
 
-        let element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
-        element.setAttribute('download', fileName);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    } 
     DownloadNShareButtons(sharingOn) {
         const fileName = this.state.fileName;
         if(!sharingOn){
             return(
                 <div className="alert alert-primary">
-                    <mark className="float-right">{this.state.fileName}</mark><br /> 
-                    Your file is ready to download and Share. <br/>
-                    <button className="btn btn-sm btn-link " onClick={this.downloadFile}>Download</button>
-                    <button className="btn btn-sm btn-link " onClick={() => this.setState({share:true})}>Share</button>
+                    <button className="btn btn-sm btn-link float-right" onClick={() => this.setState({share:true})}>Share File</button>
+                    <p><mark>{fileName}</mark> is ready to download and Share.</p>
                 </div>
             );
         }
@@ -115,7 +98,7 @@ class DownloadNShare extends React.Component{
             return(
                 <div>
                     {this.DownloadNShareButtons(sharingOn)}
-                    {this.sharingButton(sharingOn)}
+                    {this.sharingComponent(sharingOn)}
                 </div>
             );
         }
@@ -125,9 +108,8 @@ class DownloadNShare extends React.Component{
 class CreateProjectFile extends React.Component{
     constructor(props){
         super(props);
-        this.state = {fileContent: null, error: null, fileName: null, processingReady: false}
+        this.state = {fileContent: null, error: null, fileName: null}
         this.uploadFile = this.uploadFile.bind(this);
-        this.fileChange = this.fileChange.bind(this);
     }
     showError() {
         const error = this.state.error;
@@ -136,26 +118,6 @@ class CreateProjectFile extends React.Component{
         }
     }
 
-    fileChange(){
-        this.setState({fileContent: null});
-        const file = document.getElementById('fileUploder').value;
-        console.log(file)
-        if (file){
-            this.setState({processingReady: true});
-        } else {
-            this.setState({processingReady: false});
-        }
-        console.log(this.state.processingReady)
-    }
-    fileProcessingButton(){
-
-        const status = this.state.processingReady;
-        if(status){
-           return(
-               <button className="btn btn-sm btn-outline-info" placeholder="Select " onClick={this.uploadFile}>Process File</button>
-               );
-        }
-    }
     DownloadNShareComponent(){
         const fileContent = this.state.fileContent;
         if(fileContent){
@@ -164,9 +126,7 @@ class CreateProjectFile extends React.Component{
     }
   
     render(){
-        const fileContent = this.state.fileContent;
-        let error = this.state.error
-        const processingReady = this.state.processingReady;
+        const fileContent = this.state.fileContent
         return(
             <div className="container">
                 <form id="myForm" name="myForm">
@@ -177,11 +137,11 @@ class CreateProjectFile extends React.Component{
                         name="uploadedFile"
                         accept="application/vnd.ms-excel"
                         multiple={false} 
-                        onChange={this.fileChange} /> &nbsp;
+                        onChange={this.uploadFile} /> &nbsp;
                 </form>
-                {this.fileProcessingButton()}
                 {this.DownloadNShareComponent()}                
                 {this.showError()}
+                <XmlViewer fileContent={fileContent} />
             </div>
         )
     }
@@ -195,13 +155,11 @@ class CreateProjectFile extends React.Component{
         return nam;
     }
     uploadFile(){
-        const fileContent = this.state.fileContent;
         event.preventDefault();
         const file = document.getElementById('myForm');
         const fileName = this.getFileName();
         this.setState({fileName: fileName});
         let formData = new FormData(file);
-        console.log(formData);
         const request = {
             url: '/api/upload',
             method: 'POST',
