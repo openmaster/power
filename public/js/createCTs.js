@@ -1,9 +1,8 @@
 class CreateCTs extends React.Component{
     constructor(props){
         super(props);
-        this.state = {fileContent: '', error: null, fileName: 'sample.xml'}
+        this.state = {fileContent: '', error: null, fileName: 'Parameters.xml'}
         this.uploadFile = this.uploadFile.bind(this);
-        console.log('hitting create ct class constructor');
     }
 
     uploadFile(){
@@ -25,9 +24,22 @@ class CreateCTs extends React.Component{
             console.log(err);
         })
     }
+    showError() {
+        const error = this.state.error;
+        if(error){
+            return(<div className="alert alert-danger mb-2" role="alert">{error.toString()}</div>);
+        }
+    }
 
+    DownloadNShareComponent(){
+        const fileContent = this.state.fileContent;
+        if(fileContent){
+            return(<DownloadNShare fileName={this.state.fileName} fileData={fileContent} uploadTypeProject={false}/>);
+        }
+    }
     render(){
         const fileContent = this.state.fileContent
+        const fileName = this.state.fileName
         return(
             <div className="container">
                 <form id="ctFiles" name="ctFiles">
@@ -37,9 +49,11 @@ class CreateCTs extends React.Component{
                         name="uploadedFile"
                         accept="application/xml"
                         onChange={this.uploadFile}
-                        multiple={true} /> &nbsp;
+                        multiple={true} />
                 </form>
-                <XmlViewer fileContent={fileContent} />
+                {this.DownloadNShareComponent()}
+                {this.showError()}
+                <XmlViewer fileContent={fileContent} fileName={fileName}/>
             </div>
         );
     }

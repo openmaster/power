@@ -1,194 +1,4 @@
 'use strict';
-class DownloadNShare extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            fileName: this.props.fileName, 
-            fileData: this.props.fileData, 
-            error: null, 
-            share: false, 
-            uploading: false, 
-            sharingResults: null
-        }
-        
-        this.shareFile = this.shareFile.bind(this);
-    }
-
-    getEmails(){
-        const emails = [];
-        const userInput = document.getElementById('emailToShare');
-        if(userInput.value && userInput.value.toString().match(/\S+@\S+\.\S+/g)){
-            //valid email only
-            emails.push(userInput.value);
-        }else{
-            this.setState({error: 'Error! Please enter valid email address.'})
-        }
-        userInput.value = null;
-        return(emails);
-    }
-
-    shareFile(){
-        this.setState({uploading: true})
-        event.preventDefault();
-        const emails = this.getEmails();
-        const payload = {emails: emails, fileName: this.state.fileName, fileContent: this.state.fileData}
-        const request = {
-            url: '/api/shareFile',
-            method: 'POST',
-            data: payload
-        }
-        axios(request).then(result => {
-            const previousSharingResults = this.state.sharingResults || [];
-            this.setState({uploading: false, sharingResults: previousSharingResults.concat(result.data)})
-        }).catch(err => {
-            console.log(err.Error);
-            const previousSharingResults = this.state.sharingResults || [];
-            this.setState({uploading: false, sharingResults: previousSharingResults.concat({email:"Error: ", error: "Some error occured."})})
-        });
-    }
-
-    sharingResult(){
-        let results = this.state.sharingResults;
-        if(results){
-        const items = results.map((item) => <li className="list-group-item" key={item.email.toString()}> &#10025; {item.email} {(item.error)?<span className="text-danger">&#10006; {item.error}</span>:<span>&#10004;</span>}</li>);
-            return(
-                <ul className="list-group">
-                    {items}
-                </ul>
-            );
-        } else {
-            return null;
-        }
-    }
-    sharingComponent(sharingOn){
-        let uploading = this.state.uploading;
-        if(sharingOn){
-            return(
-                <div className="alert alert-primary">
-                    <form>
-                        <mark className="float-right">{this.state.fileName}</mark><br />
-                            Please Enter the email address to share the file with.
-                        <input id="emailToShare" className="form-control form-control-sm mb-2" type="email" placeholder="Email"/>
-                        <button className="btn btn-sm btn-primary mb-2" onClick={this.shareFile} disabled={uploading}>{(uploading)?'Uploading...':'Share'}</button>
-                        <button className="btn btn-sm btn-link float-right" onClick={() => this.setState({share: false})}>Dont Share</button>
-                    </form>
-                    {this.sharingResult()}
-                </div>
-            );
-        }
-    }
-
-    DownloadNShareButtons(sharingOn) {
-        const fileName = this.state.fileName;
-        if(!sharingOn){
-            return(
-                <div className="alert alert-primary">
-                    <button className="btn btn-sm btn-link float-right" onClick={() => this.setState({share:true})}>Share File</button>
-                    <p><mark>{fileName}</mark> is ready to download and Share.</p>
-                </div>
-            );
-        }
-    }
-    render(){
-        let err = this.state.error;
-        let sharingOn = this.state.share;
-        if(err){
-            return(<div className="alert alert-danger" role="alert">{err.toString()} <button className="btn btn-sm btn-danger float-right" onClick={()=>this.setState({error: null})}>Ok</button></div>);
-        } else {
-            return(
-                <div>
-                    {this.DownloadNShareButtons(sharingOn)}
-                    {this.sharingComponent(sharingOn)}
-                </div>
-            );
-        }
-    }
-}
-
-class CreateProjectFile extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {fileContent: null, error: null, fileName: null}
-        this.uploadFile = this.uploadFile.bind(this);
-    }
-    showError() {
-        const error = this.state.error;
-        if(error){
-            return(<div className="alert alert-danger mb-2" role="alert">{error.toString()}</div>);
-        }
-    }
-
-    DownloadNShareComponent(){
-        const fileContent = this.state.fileContent;
-        if(fileContent){
-            return(<DownloadNShare fileName={this.state.fileName} fileData={this.state.fileContent}/>);
-        }
-    }
-  
-    render(){
-        const fileContent = this.state.fileContent
-        return(
-            <div className="container">
-                <form id="myForm" name="myForm">
-                    <input className="form-control-file" 
-                        type="file" 
-                        id="fileUploder" 
-                        value={this.state.selectedFile}
-                        name="uploadedFile"
-                        accept="application/vnd.ms-excel"
-                        multiple={false} 
-                        onChange={this.uploadFile} /> &nbsp;
-                </form>
-                {this.DownloadNShareComponent()}                
-                {this.showError()}
-                <XmlViewer fileContent={fileContent} />
-            </div>
-        )
-    }
-    getFileName(){
-        let nam = document.getElementById('fileUploder').files[0].name.toString();
-        nam = nam.replace(/clean/gi, "")
-        nam = nam.replace(/.xls/gi, "")
-        nam = nam.replace(/^_/, "")
-        nam = nam.replace(/_$/, "")
-        nam = nam + "_project.xml"
-        return nam;
-    }
-    uploadFile(){
-        event.preventDefault();
-        const file = document.getElementById('myForm');
-        const fileName = this.getFileName();
-        this.setState({fileName: fileName});
-        let formData = new FormData(file);
-        const request = {
-            url: '/api/upload',
-            method: 'POST',
-            data: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-
-        axios(request).then((result) => {
-            this.setState({fileContent: result.data});
-        }).catch((err) => {
-            this.setState({error: err});
-            console.log(err);
-        })
-    }
-}
-
-class CreateCTs extends React.Component{
-    render(){
-        
-        return(
-            <div>
-                <CreateCTs/>
-            </div>
-        )      
-    }
-}
-
 class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -208,8 +18,11 @@ class Menu extends React.Component {
         return(
             <div>
                 <nav className="navbar navbar-light bg-light">
-                    <span className="navbar-brand mb-0 h1">Convert excel to project XML and share with developer </span>
-                    <button className="btn btn-sm btn-outline-primary" onClick={this.handleClick}>Create CT's File </button>
+                    <div className="container">
+                        <h5>Portable Meter Project File.</h5>
+                        <button className="btn btn-sm btn-outline-primary" onClick={this.handleClick}>Create CT's File </button>
+                        <p className="lead">You can convert clean excel file to xml project file and share it with developers.</p>
+                    </div>
                 </nav>  
                 <CreateProjectFile/>
             </div>
@@ -218,9 +31,12 @@ class Menu extends React.Component {
         return(
             <div>
                 <nav className="navbar navbar-light bg-light">
-                    <span className="navbar-brand mb-0 h1">Combine and share CT's files with developer</span>
-                    <button className="btn btn-sm btn-outline-primary" onClick={this.handleClick}>Create Project File </button>    
-                </nav>
+                <div className="container">
+                    <h5 className="">Portable Meter CT's File.</h5>
+                    <button className="btn btn-sm btn-outline-primary float-right" onClick={this.handleClick}>Create Project File </button>
+                    <p className="lead">You can combine CT data, create a CT's file and share the CT's files with developers.</p>    
+                </div>
+                </nav>  
                 <CreateCTs/>
             </div>
         );

@@ -1,17 +1,18 @@
 class XmlViewer extends React.Component{
     constructor(props){
         super(props);
-        this.state = {fileContent: this.props.fileContent, error: null};
+        this.state = {fileName: this.props.fileName, fileContent: this.props.fileContent, error: null};
         this.downloadFile = this.downloadFile.bind(this);
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.fileContent !== prevProps.fileContent) {
-          this.setState({fileContent: this.props.fileContent})
+        if (this.props.fileContent !== prevProps.fileContent || this.props.fileName !== prevProps.fileName) {
+          this.setState({fileContent: this.props.fileContent, fileName: this.props.fileName})
         }
+        
     }
     downloadFile(){
-        const fileName = 'sample.xml';
+        const fileName = this.state.fileName;
         const data = this.state.fileContent;
         if(!fileName || !data){
             this.setState({error: "Error !! Invalid file name or file content."});
@@ -38,14 +39,14 @@ class XmlViewer extends React.Component{
         } else if(fileContent) {
             return(
                 <div className="container">
-                    <button className="btn btn-sm btn-link float-right" onClick={this.downloadFile}>Download</button>                 
-                    <h3 className="text-center">File Content</h3>
+                    <button className="btn btn-sm btn-link float-right" onClick={this.downloadFile}>Download As File</button>                 
+                    <h4 className="text-center">Your File Contents</h4>
                     <textarea className="container userFile" readOnly value={fileContent} />
                 </div>
             );
         } else {
             return(
-                <h5>Please Select a file.</h5>
+                <h5 className="text-info lead">Please Select a file.</h5>
             );
         }
     }
