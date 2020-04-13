@@ -1,14 +1,19 @@
 class CreateCTs extends React.Component{
     constructor(props){
         super(props);
-        this.state = {fileContent: '', error: null, fileName: 'Parameters.xml'}
+        this.state = {ctData: null, error: null}
         this.uploadFile = this.uploadFile.bind(this);
     }
 
     uploadFile(){
         event.preventDefault();
         const file = document.getElementById('ctFiles');
+        const selectedFiles = document.getElementById('fileUploader');
         let formData = new FormData(file);
+        
+        if(selectedFiles.files.length < 1){
+            return;
+        }
         const request = {
             url: '/api/uploadCT',
             method: 'POST',
@@ -18,12 +23,13 @@ class CreateCTs extends React.Component{
             }
         }
         axios(request).then((result) => {
-            this.setState({fileContent: result.data})
+            this.setState({ctData: result.data})
         }).catch((err) => {
             this.setState({error: err});
             console.log(err);
         })
     }
+
     showError() {
         const error = this.state.error;
         if(error){
@@ -31,29 +37,26 @@ class CreateCTs extends React.Component{
         }
     }
 
-    DownloadNShareComponent(){
-        const fileContent = this.state.fileContent;
-        if(fileContent){
-            return(<DownloadNShare fileName={this.state.fileName} fileData={fileContent} uploadTypeProject={false}/>);
+    showCompareson(){
+        const ctData = this.state.ctData;
+        if(ctData){
+            return(<CompareCTData CTData={ctData}/>);
         }
     }
+
     render(){
-        const fileContent = this.state.fileContent
-        const fileName = this.state.fileName
         return(
             <div className="container">
                 <form id="ctFiles" name="ctFiles">
                     <input type="file"
                         id="fileUploader"
-                        value={this.state.selectedFile}
                         name="uploadedFile"
                         accept="application/xml"
                         onChange={this.uploadFile}
                         multiple={true} />
-                </form>
-                {this.DownloadNShareComponent()}
+                </form>   
                 {this.showError()}
-                <XmlViewer fileContent={fileContent} fileName={fileName}/>
+                {this.showCompareson()}
             </div>
         );
     }
