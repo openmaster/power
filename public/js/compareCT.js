@@ -5,6 +5,9 @@ class CompareCTData extends React.Component{
         this.sortd = this.sortd.bind(this);
          this.sortc = this.sortc.bind(this);
         this.createCTfile = this.createCTfile.bind(this);
+        this.removeCT = this.removeCT.bind(this);
+        this.sortC = null;
+        this.sortD = null;
     }
 
     componentDidUpdate(prevProps) {
@@ -15,17 +18,35 @@ class CompareCTData extends React.Component{
 
     sortd(){
         const data = this.state.CTData;
-        data.root.sort((a, b) => {
-            return(a.ct.DegreeCoeff[0].d[0] - b.ct.DegreeCoeff[0].d[0]);
-        })
+        if(this.sortD){
+            data.root.sort((a, b) => {
+                return(b.ct.DegreeCoeff[0].d[0] - a.ct.DegreeCoeff[0].d[0]);
+            })
+            this.sortD = false;
+        } else {
+            data.root.sort((a, b) => {
+                return(a.ct.DegreeCoeff[0].d[0] - b.ct.DegreeCoeff[0].d[0]);
+            })
+            this.sortD = true;
+        }
+        
         this.setState({CTData: JSON.parse(JSON.stringify(data))});
     }
 
     sortc(){
         const data = this.state.CTData;
-        data.root.sort((a, b) => {
-            return(a.ct.DegreeCoeff[0].c[0] - b.ct.DegreeCoeff[0].c[0]);
-        })
+        if(this.sortC){
+            data.root.sort((a, b) => {
+                return(b.ct.DegreeCoeff[0].c[0] - a.ct.DegreeCoeff[0].c[0]);
+            })
+            this.sortC = false;
+        } else {
+            data.root.sort((a, b) => {
+                return(a.ct.DegreeCoeff[0].c[0] - b.ct.DegreeCoeff[0].c[0]);
+            })
+            this.sortC = true;
+        }
+        
         this.setState({CTData: JSON.parse(JSON.stringify(data))});
     }
 
@@ -36,7 +57,7 @@ class CompareCTData extends React.Component{
                 if( ct.ct){
                     return(
                         <tr key={ct.ct.$.sn}>
-                            <td><input type="checkbox" onClick={() => ct.ct.seleted = true} /></td>
+                            <td><input type="checkbox" onClick={() => ct.ct.seleted = !ct.ct.seleted} /></td>
                             <td>{ct.ct.$.sn}-{ct.ct.model[0]}</td>
                             <td className="text-right">{ct.ct.DegreeCoeff[0].a}</td>
                             <td className="text-right">{ct.ct.DegreeCoeff[0].b}</td>
@@ -52,6 +73,7 @@ class CompareCTData extends React.Component{
                     <hr/>
                     <h5 className="text-center">3rd Degree Coefficient - Y gain</h5>
                     <button className="btn btn-sm btn-link float-right" onClick={this.createCTfile}>Create CT file</button>
+                    <button className="btn btn-sm btn-link float-right" onClick={this.removeCT}>Remove CT</button>
                     <table className="table table-striped table-dark">
                         <thead className="">
                             <tr>
@@ -61,12 +83,12 @@ class CompareCTData extends React.Component{
                                 <th className="text-center"><button className="btn btn-sm btn-light" disabled>B</button></th>
                                 <th className="text-center">
                                     <button className="btn btn-sm btn-light" onClick={this.sortc}>
-                                        C <img src="../logo/sort.svg" height="17px"/>
+                                        C <img src="../logo/sort.png" height="17px"/>
                                     </button>
                                 </th>
                                 <th className="text-center">
                                     <button className="btn btn-sm btn-light" onClick={this.sortd}>
-                                        D <img src="../logo/sort.svg" height="17px"/>
+                                        D <img src="../logo/sort.png" height="17px"/>
                                     </button>
                                 </th>
                             </tr>
@@ -76,6 +98,14 @@ class CompareCTData extends React.Component{
                 </div>
             );
         }
+    }
+
+    removeCT(){
+        const data = this.state.CTData;
+        const newData = data.root.filter((f) => {
+            return(f.ct.seleted !== true);
+        });
+        this.setState({CTData: {root: newData}});
     }
 
     createCTfile(){
