@@ -46,15 +46,17 @@ class CreateCTs extends React.Component{
 
     render(){
         return(
-            <div className="container">
-                <form id="ctFiles" name="ctFiles">
-                    <input type="file"
-                        id="fileUploader"
-                        name="uploadedFile"
-                        accept="application/xml"
-                        onChange={this.uploadFile}
-                        multiple={true} />
-                </form>   
+            <div>
+                <div className="container">
+                    <form id="ctFiles" name="ctFiles">
+                        <input type="file"
+                            id="fileUploader"
+                            name="uploadedFile"
+                            accept="application/xml"
+                            onChange={this.uploadFile}
+                            multiple={true} />
+                    </form>   
+                </div>
                 {this.showError()}
                 {this.showCompareson()}
             </div>

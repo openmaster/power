@@ -69,32 +69,41 @@ class CompareCTData extends React.Component{
             })
         
             return(
-                <div>
-                    <hr/>
-                    <h5 className="text-center">3rd Degree Coefficient - Y gain</h5>
-                    <button className="btn btn-sm btn-link float-right" onClick={this.createCTfile}>Create CT file</button>
-                    <button className="btn btn-sm btn-link float-right" onClick={this.removeCT}>Remove CT</button>
-                    <table className="table table-striped table-dark">
-                        <thead className="">
-                            <tr>
-                                <th></th>
-                                <th ># CT's</th>
-                                <th className="text-center"><button className="btn btn-sm btn-light" disabled>A</button></th>
-                                <th className="text-center"><button className="btn btn-sm btn-light" disabled>B</button></th>
-                                <th className="text-center">
-                                    <button className="btn btn-sm btn-light" onClick={this.sortc}>
-                                        C <img src="../logo/sort.png" height="17px"/>
-                                    </button>
-                                </th>
-                                <th className="text-center">
-                                    <button className="btn btn-sm btn-light" onClick={this.sortd}>
-                                        D <img src="../logo/sort.png" height="17px"/>
-                                    </button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </table>
+                <div className="container-fluid">
+                    <hr />
+                    <div className="row">
+                        <div className="col-8">
+                            <h5 className="text-center">3rd Degree Coefficient - Y gain</h5>
+                            <button className="btn btn-sm btn-link float-right" onClick={this.createCTfile}>Create CT file</button>
+                            <button className="btn btn-sm btn-link float-right" onClick={this.removeCT}>Remove CT</button>
+                            <button className="btn btn-sm btn-link float-right" onClick={this.CreateGraph}>Create Graph</button>
+                            <table className="table table-striped table-dark">
+                                <thead className="">
+                                    <tr>
+                                        <th></th>
+                                        <th ># CT's</th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>A</button></th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>B</button></th>
+                                        <th className="text-center">
+                                            <button className="btn btn-sm btn-light" onClick={this.sortc}>
+                                                C <img src="../logo/sort.png" height="17px"/>
+                                            </button>
+                                        </th>
+                                        <th className="text-center">
+                                            <button className="btn btn-sm btn-light" onClick={this.sortd}>
+                                                D <img src="../logo/sort.png" height="17px"/>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </table>
+                        </div>
+                        <div className="col-4">
+                            {this.CreateGraph()}
+                        </div>
+                    </div>
+                    
                 </div>
             );
         }
@@ -102,6 +111,7 @@ class CompareCTData extends React.Component{
 
     removeCT(){
         const data = this.state.CTData;
+        console.log(data)
         const newData = data.root.filter((f) => {
             return(f.ct.seleted !== true);
         });
@@ -133,6 +143,14 @@ class CompareCTData extends React.Component{
         if(fileContent){
             return(<DownloadNShare fileName={this.state.fileName} fileData={fileContent} uploadTypeProject={false}/>);
         }
+    }
+
+    CreateGraph(){
+        return(
+            <div className="container">
+                <p>My Graph</p>
+            </div>
+        )
     }
 
     render(){
