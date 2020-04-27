@@ -22,20 +22,28 @@ class CreateProjectFile extends React.Component{
         const fileContent = this.state.fileContent
         const fileName = this.state.fileName
         return(
-            <div className="container">
-                <form id="myForm" name="myForm" className="float-center">
-                    <input className="form-control-file" 
-                        type="file" 
-                        id="fileUploder" 
-                        value={this.state.selectedFile}
-                        name="uploadedFile"
-                        accept="application/vnd.ms-excel"
-                        multiple={false} 
-                        onChange={this.uploadFile} />
-                </form>
-                {this.DownloadNShareComponent()}                
+            <div>
+                <div  className="container">
+                    <form id="myForm" name="myForm" className="float-center">
+                        <input className="form-control-file" 
+                            type="file" 
+                            id="fileUploder" 
+                            value={this.state.selectedFile}
+                            name="uploadedFile"
+                            accept="application/vnd.ms-excel"
+                            multiple={false} 
+                            onChange={this.uploadFile} />
+                    </form>
+                </div>
                 {this.showError()}
-                <XmlViewer fileContent={fileContent} fileName={fileName} />
+                <div className="row">
+                    <div className="col-md-4">
+                        {this.DownloadNShareComponent()}  
+                    </div>
+                    <div className="col-md-8">
+                        <XmlViewer fileContent={fileContent} fileName={fileName} />
+                    </div>
+                </div>
             </div>
         )
     }

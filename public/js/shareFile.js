@@ -65,7 +65,7 @@ class DownloadNShare extends React.Component{
         let uploading = this.state.uploading;
         if(sharingOn){
             return(
-                <div className="alert alert-primary">
+                <div className="alert alert-primary container">
                     <form>
                         <mark className="float-right">{this.state.fileName}</mark><br />
                             Please Enter the email address to share the file with.

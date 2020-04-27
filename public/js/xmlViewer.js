@@ -46,7 +46,7 @@ class XmlViewer extends React.Component{
             );
         } else {
             return(
-                <h5 className="text-secondary lead">Please Select a file.</h5>
+                <div></div>
             );
         }
     }
