@@ -36,12 +36,14 @@ class CreateProjectFile extends React.Component{
                     </form>
                 </div>
                 {this.showError()}
+                {this.DownloadNShareComponent()}
+                <XmlViewer fileContent={fileContent} fileName={fileName} />
                 <div className="row">
                     <div className="col-md-4">
-                        {this.DownloadNShareComponent()}  
+                         
                     </div>
                     <div className="col-md-8">
-                        <XmlViewer fileContent={fileContent} fileName={fileName} />
+                        
                     </div>
                 </div>
             </div>

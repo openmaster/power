@@ -41,7 +41,7 @@ class XmlViewer extends React.Component{
                 <div className="container">
                     <button className="btn btn-sm btn-link float-right" onClick={this.downloadFile}>Download As File</button>                 
                     <h4 className="text-center">Your File Contents</h4>
-                    <textarea className="container userFile" readOnly value={fileContent} />
+                    <textarea className="container-fluid userFile" readOnly value={fileContent} />
                 </div>
             );
         } else {

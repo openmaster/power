@@ -65,7 +65,7 @@ class DownloadNShare extends React.Component{
         let uploading = this.state.uploading;
         if(sharingOn){
             return(
-                <div className="alert alert-primary container">
+                <div className="alert alert-primary container-fluid">
                     <form>
                         <mark className="float-right">{this.state.fileName}</mark><br />
                             Please Enter the email address to share the file with.
@@ -83,9 +83,11 @@ class DownloadNShare extends React.Component{
         const fileName = this.state.fileName;
         if(!sharingOn){
             return(
-                <div className="alert alert-primary">
+                <div>
+                    <div className="alert alert-primary">
+                        <p><mark>{fileName}</mark> is ready to download and Share.</p>
+                    </div>
                     <button className="btn btn-sm btn-link float-right" onClick={() => this.setState({share:true})}>Share File</button>
-                    <p><mark>{fileName}</mark> is ready to download and Share.</p>
                 </div>
             );
         }
@@ -97,7 +99,7 @@ class DownloadNShare extends React.Component{
             return(<div className="alert alert-danger" role="alert">{err.toString()} <button className="btn btn-sm btn-danger float-right" onClick={()=>this.setState({error: null})}>Ok</button></div>);
         } else {
             return(
-                <div>
+                <div className="container">
                     {this.DownloadNShareButtons(sharingOn)}
                     {this.sharingComponent(sharingOn)}
                 </div>
