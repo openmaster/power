@@ -1,14 +1,14 @@
 class CompareCTData extends React.Component{
     constructor(props){
         super(props);
-        this.state = {CTData: this.props.CTData, fileContent: null, fileName: "Parameters.xml", error: null};
-        this.sortd = this.sortd.bind(this);
-         this.sortc = this.sortc.bind(this);
+        this.state = {CTData: this.props.CTData, fileContent: null, fileName: "Parameters.xml", graphData: null, error: null};
+        this.sorta = this.sorta.bind(this);
+        this.sortb = this.sortb.bind(this);
         this.createCTfile = this.createCTfile.bind(this);
         this.removeCT = this.removeCT.bind(this);
         this.CreateGraph = this.CreateGraph.bind(this);
-        this.sortC = null;
-        this.sortD = null;
+        this.sortA = null;
+        this.sortB = null;
     }
 
     componentDidUpdate(prevProps) {
@@ -17,39 +17,40 @@ class CompareCTData extends React.Component{
         }
     }
 
-    sortd(){
+    sorta(){
         const data = this.state.CTData;
-        if(this.sortD){
+        if(this.sortA){
             data.root.sort((a, b) => {
-                return(b.ct.GainPoly[0].d[0] - a.ct.GainPoly[0].d[0]);
+                return(b.ct.GainPoly[0].a[0] - a.ct.GainPoly[0].a[0]);
             })
-            this.sortD = false;
+            this.sortA = false;
         } else {
             data.root.sort((a, b) => {
-                return(a.ct.GainPoly[0].d[0] - b.ct.GainPoly[0].d[0]);
+                return(a.ct.GainPoly[0].a[0] - b.ct.GainPoly[0].a[0]);
             })
-            this.sortD = true;
+            this.sortA = true;
         }
         
         this.setState({CTData: JSON.parse(JSON.stringify(data))});
     }
 
-    sortc(){
+    sortb(){
         const data = this.state.CTData;
-        if(this.sortC){
+        if(this.sortB){
             data.root.sort((a, b) => {
-                return(b.ct.GainPoly[0].c[0] - a.ct.GainPoly[0].c[0]);
+                return(b.ct.GainPoly[0].b[0] - a.ct.GainPoly[0].b[0]);
             })
-            this.sortC = false;
+            this.sortB = false;
         } else {
             data.root.sort((a, b) => {
-                return(a.ct.GainPoly[0].c[0] - b.ct.GainPoly [0].c[0]);
+                return(a.ct.GainPoly[0].b[0] - b.ct.GainPoly [0].b[0]);
             })
-            this.sortC = true;
+            this.sortB = true;
         }
         
         this.setState({CTData: JSON.parse(JSON.stringify(data))});
     }
+
 
     getTabularData() {
         const data = this.state.CTData;
@@ -60,10 +61,14 @@ class CompareCTData extends React.Component{
                         <tr key={ct.ct.$.sn}>
                             <td><input type="checkbox" onClick={() => ct.ct.seleted = !ct.ct.seleted} /></td>
                             <td>{ct.ct.$.sn}-{ct.ct.model[0]}</td>
-                            <td className="text-right">{ct.ct.GainPoly[0].a}</td>
-                            <td className="text-right">{ct.ct.GainPoly[0].b}</td>
-                            <td className="text-right">{ct.ct.GainPoly[0].c}</td>
-                            <td className="text-right">{ct.ct.GainPoly[0].d}</td>
+                            <td className="text-right ">{ct.ct.GainPoly[0].a}</td>
+                            <td className="text-right ">{ct.ct.GainPoly[0].b}</td>
+                            <td className="text-right ">{ct.ct.GainPoly[0].c}</td>
+                            <td className="text-right ">{ct.ct.GainPoly[0].d}</td>
+                            <td className="text-right ">{ct.ct.PhasePoly[0].a}</td>
+                            <td className="text-right ">{ct.ct.PhasePoly[0].b}</td>
+                            <td className="text-right ">{ct.ct.PhasePoly[0].c}</td>
+                            <td className="text-right ">{ct.ct.PhasePoly[0].d}</td>
                         </tr>
                     );
                 }
@@ -74,38 +79,56 @@ class CompareCTData extends React.Component{
                     <hr />
                     <div className="row">
                         <div className="col-md-4">
-                            <h3 className="text-center">Y-phase Graph</h3>
-                            <canvas id="myChart" ></canvas>
+                            <div className="graph gainGraph" >
+                                <h5>Y Gain Error</h5>
+                                <canvas id="gainGraph"></canvas>
+                            </div>
+                            <div className="graph phaseGraph" >
+                                <h5>Y Phase Error</h5>
+                                <canvas id="phaseGraph"></canvas>
+                            </div>
+                            
                         </div>
                         <div className="col-md-8">
-                            <h5 className="text-center">3rd Degree Coefficient - Y gain</h5>
+                            
                             <button className="btn btn-sm btn-link float-right" onClick={this.createCTfile}>Create CT file</button>
                             <button className="btn btn-sm btn-link float-right" onClick={this.removeCT}>Remove CT</button>
                             <button className="btn btn-sm btn-link float-right" onClick={this.CreateGraph}>Create Graph</button>
-                            <table className="table table-striped table-dark">
+                            <table className="table table-bordered table-hover table-dark">
                                 <thead className="">
+                                    <tr>
+                                        <th colSpan="10" className="bg-info text-center">CT Files</th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan="2" className="text-center"></th>
+                                        <th colSpan="4" className="text-center">Gain </th>
+                                        <th colSpan="4" className="text-center">Phase </th>
+                                    </tr>
                                     <tr>
                                         <th></th>
                                         <th ># CT's</th>
+                                        <th className="text-center">
+                                            <button className="btn btn-sm btn-light" onClick={this.sorta}>
+                                                A <img src="../logo/sort.png" height="17px"/>
+                                            </button>
+                                        </th>
+                                        <th className="text-center">
+                                            <button className="btn btn-sm btn-light" onClick={this.sortb}>
+                                                B <img src="../logo/sort.png" height="17px"/>
+                                            </button>
+                                        </th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>C</button></th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>D</button></th>
                                         <th className="text-center"><button className="btn btn-sm btn-light" disabled>A</button></th>
                                         <th className="text-center"><button className="btn btn-sm btn-light" disabled>B</button></th>
-                                        <th className="text-center">
-                                            <button className="btn btn-sm btn-light" onClick={this.sortc}>
-                                                C <img src="../logo/sort.png" height="17px"/>
-                                            </button>
-                                        </th>
-                                        <th className="text-center">
-                                            <button className="btn btn-sm btn-light" onClick={this.sortd}>
-                                                D <img src="../logo/sort.png" height="17px"/>
-                                            </button>
-                                        </th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>C</button></th>
+                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>D </button></th>
                                     </tr>
                                 </thead>
                                 <tbody>{rows}</tbody>
                             </table>
                         </div>
                     </div>
-                    
                 </div>
             );
         }
@@ -173,45 +196,75 @@ class CompareCTData extends React.Component{
             'rgba(64, 25, 154, 1)'
         ];
         const xAxis = [-4, -3, -2, -1, 0, 1, 2, 3];
-        const finalData = {labels: xAxis, datasets: []};
-        const result = []
+        const finalData = {
+            phase: {labels: xAxis, datasets: []},
+            gain: {labels: xAxis, datasets: []}
+        };
         const selectedData = this.state.CTData.root.filter((f) => {
             return(f.ct.seleted === true);
         });
         // y = a + b*x + c*x^2 + d*x^3
-        selectedData.forEach(element => {
-            let a = parseFloat(element.ct.GainPoly[0].a[0]);
-            let b = parseFloat(element.ct.GainPoly[0].b[0]);
-            let c = parseFloat(element.ct.GainPoly[0].c[0]);
-            let d = parseFloat(element.ct.GainPoly[0].d[0]);
-            const yAxis = [];
-            xAxis.forEach((x) => {
-                let y = a + b * x + c * Math.pow(x, 2) + d * Math.pow(x, 3);
-                yAxis.push(y);
-            });
-            result.push({xAxis: xAxis, yAxis: yAxis, label: element.ct.$.sn});
-        });
         let count = 0;
-        result.forEach((r) => {
+        selectedData.forEach(element => {
+            let gain_a = parseFloat(element.ct.GainPoly[0].a[0]);
+            let gain_b = parseFloat(element.ct.GainPoly[0].b[0]);
+            let gain_c = parseFloat(element.ct.GainPoly[0].c[0]);
+            let gain_d = parseFloat(element.ct.GainPoly[0].d[0]);
+            let phase_a = parseFloat(element.ct.PhasePoly[0].a[0]);
+            let phase_b = parseFloat(element.ct.PhasePoly[0].b[0]);
+            let phase_c = parseFloat(element.ct.PhasePoly[0].c[0]);
+            let phase_d = parseFloat(element.ct.PhasePoly[0].d[0]);
+            const gain_yAxis = [];
+            const phase_yAxis = [];
+            xAxis.forEach((x) => {
+                let gain_y = gain_a + gain_b * x + gain_c * Math.pow(x, 2) + gain_d * Math.pow(x, 3);
+                let phase_y = phase_a + phase_b * x + phase_c * Math.pow(x, 2) + phase_d * Math.pow(x, 3);
+                gain_yAxis.push(gain_y);
+                phase_yAxis.push(phase_y);
+            });
             if(count > 9){
                 count = 0;
             }
-            finalData.datasets.push({label: r.label, data: r.yAxis, borderColor: borderColor[count], backgroundColor: backgroundColor[count]});
-            count++
+            finalData.gain.datasets.push({label: element.ct.$.sn, data: gain_yAxis, borderColor: borderColor[count], fill: false });
+            finalData.phase.datasets.push({label: element.ct.$.sn, data: phase_yAxis, borderColor: borderColor[count], fill: false})
+            count++;
         });
+        
+        console.log(finalData);
         return(finalData);
     }
 
+    createDefaultGraph = () => {
+        const ctx = document.getElementById('gainGraph').getContext('2d');
+    
+        ctx.font = "30px Arial";
+        ctx.fillText("Please Select Data", 10, 50);
+    }
+
     CreateGraph(){
-        const yData = this.createDataset();
-        const ctx = document.getElementById('myChart').getContext('2d');
-        
-        if(window.bar != undefined){
-            window.bar.destroy();
+        const graphData = this.createDataset();
+        const gain_ctx = document.getElementById('gainGraph').getContext('2d');
+        const phase_ctx = document.getElementById('phaseGraph').getContext('2d');
+        if(window.gain != undefined){
+            window.gain.destroy();
         }
-        window.bar = new Chart(ctx, {
+        window.gain = new Chart(gain_ctx, {
 			type: 'line',
-            data: yData,
+            data: graphData.gain,
+            // Configuration options go here
+            options: {
+                tooltips: {
+                    enabled: true
+                }
+            } 
+        });
+
+        if(window.phase != undefined){
+            window.phase.destroy();
+        }
+        window.phase = new Chart(phase_ctx, {
+			type: 'line',
+            data: graphData.phase,
             // Configuration options go here
             options: {
                 tooltips: {
@@ -220,6 +273,7 @@ class CompareCTData extends React.Component{
             } 
         });
     }
+ 
 
     render(){
         const fileContent = this.state.fileContent;
@@ -228,6 +282,7 @@ class CompareCTData extends React.Component{
                 {this.ShareFileComponent()}
                 {this.getTabularData()}
                 <XmlViewer fileContent={fileContent} fileName={this.state.fileName}/>
+                
             </div>
         );
     }

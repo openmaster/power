@@ -84,8 +84,8 @@ class DownloadNShare extends React.Component{
         if(!sharingOn){
             return(
                 <div>
-                    <div className="alert alert-primary">
-                        <p><mark>{fileName}</mark> is ready to download and Share.</p>
+                    <div className="alert alert-primary text-center">
+                        <small><mark>{fileName}</mark> is ready to download and Share.</small>
                     </div>
                     <button className="btn btn-sm btn-link float-right" onClick={() => this.setState({share:true})}>Share File</button>
                 </div>
