@@ -1,7 +1,7 @@
 class CompareCTData extends React.Component{
     constructor(props){
         super(props);
-        this.state = {CTData: this.props.CTData, fileContent: null, fileName: "Parameters.xml", graphData: null, error: null};
+        this.state = {CTData: this.props.CTData, fileContent: null, fileName: "Parameters.xml", graphData: null, extra: false, more: null};
         this.sorta = this.sorta.bind(this);
         this.sortb = this.sortb.bind(this);
         this.createCTfile = this.createCTfile.bind(this);
@@ -9,6 +9,10 @@ class CompareCTData extends React.Component{
         this.CreateGraph = this.CreateGraph.bind(this);
         this.sortA = null;
         this.sortB = null;
+        this.toggleMore = this.toggleMore.bind(this);
+    }
+    fixDecimalPlacement(ctData){
+        cxx 
     }
 
     componentDidUpdate(prevProps) {
@@ -51,6 +55,12 @@ class CompareCTData extends React.Component{
         this.setState({CTData: JSON.parse(JSON.stringify(data))});
     }
 
+    toggleMore(){
+        
+        this.setState(function (state) {
+            return {more: !state.more }
+        })
+    }
 
     getTabularData() {
         const data = this.state.CTData;
@@ -61,33 +71,42 @@ class CompareCTData extends React.Component{
                         <tr key={ct.ct.$.sn}>
                             <td><input type="checkbox" onClick={() => ct.ct.seleted = !ct.ct.seleted} /></td>
                             <td>{ct.ct.$.sn}-{ct.ct.model[0]}</td>
-                            <td className="text-right ">{ct.ct.GainPoly[0].a}</td>
-                            <td className="text-right ">{ct.ct.GainPoly[0].b}</td>
-                            <td className="text-right ">{ct.ct.GainPoly[0].c}</td>
-                            <td className="text-right ">{ct.ct.GainPoly[0].d}</td>
-                            <td className="text-right ">{ct.ct.PhasePoly[0].a}</td>
-                            <td className="text-right ">{ct.ct.PhasePoly[0].b}</td>
-                            <td className="text-right ">{ct.ct.PhasePoly[0].c}</td>
-                            <td className="text-right ">{ct.ct.PhasePoly[0].d}</td>
+                            <td className="text-right ">{parseFloat(ct.ct.GainPoly[0].a).toFixed(4)}</td>
+                            <td className="text-right ">{parseFloat(ct.ct.GainPoly[0].b).toFixed(4)}</td>
+                            {this.state.more && <td className="text-right ">{parseFloat(ct.ct.GainPoly[0].c).toFixed(4)}</td>}
+                            {this.state.more && <td className="text-right ">{parseFloat(ct.ct.GainPoly[0].d).toFixed(4)}</td>}
+                            
+                            <td className="text-right ">{parseFloat(ct.ct.PhasePoly[0].a).toFixed(4)}</td>
+                            <td className="text-right ">{parseFloat(ct.ct.PhasePoly[0].b).toFixed(4)}</td>
+                            {this.state.more && <td className="text-right ">{parseFloat(ct.ct.PhasePoly[0].c).toFixed(4)}</td>}
+                            {this.state.more && <td className="text-right ">{parseFloat(ct.ct.PhasePoly[0].d).toFixed(4)}</td>}
                         </tr>
                     );
                 }
             })
+            
         
             return(
                 <div className="container-fluid">
                     <hr />
-                    <div className="row">
+                    <div className="row" >
                         <div className="col-md-4">
+                        <div id="graphBanner">
+                            <h3>Please select CT's to create graphs. </h3>
+                            <img src="../logo/graph.png"></img>
+                        </div>
+                            <div className="graphArea" id="graphArea">
+                                
                             <div className="graph gainGraph" >
                                 <h5>Y Gain Error</h5>
                                 <canvas id="gainGraph"></canvas>
                             </div>
+                            <hr/>
                             <div className="graph phaseGraph" >
                                 <h5>Y Phase Error</h5>
                                 <canvas id="phaseGraph"></canvas>
                             </div>
-                            
+                            </div>
                         </div>
                         <div className="col-md-8">
                             
@@ -97,32 +116,35 @@ class CompareCTData extends React.Component{
                             <table className="table table-bordered table-hover table-dark">
                                 <thead className="">
                                     <tr>
-                                        <th colSpan="10" className="bg-info text-center">CT Files</th>
+                                        <th colSpan={this.state.more ? "10" : "6"} className="bg-info text-center">
+                                            CT Files
+                                            <span className="float-right" ><button className="btn btn-sm btn-info" onClick={this.toggleMore}><u>{this.state.more ? "Show Less" : "Show Details"}</u></button></span>
+                                        </th>
                                     </tr>
                                     <tr>
                                         <th colSpan="2" className="text-center"></th>
-                                        <th colSpan="4" className="text-center">Gain </th>
-                                        <th colSpan="4" className="text-center">Phase </th>
+                                        <th colSpan={this.state.more ? "4" : "2"} className="text-center">Gain</th>
+                                        <th colSpan={this.state.more ? "4" : "2"} className="text-center">Phase </th>
                                     </tr>
                                     <tr>
                                         <th></th>
                                         <th ># CT's</th>
                                         <th className="text-center">
-                                            <button className="btn btn-sm btn-light" onClick={this.sorta}>
-                                                A <img src="../logo/sort.png" height="17px"/>
+                                            <button className="btn btn-sm btn-info btn-block" onClick={this.sorta}>
+                                                A <img className="float-right" src="../logo/sort.svg" height="17px"/>
                                             </button>
                                         </th>
                                         <th className="text-center">
-                                            <button className="btn btn-sm btn-light" onClick={this.sortb}>
-                                                B <img src="../logo/sort.png" height="17px"/>
+                                            <button className="btn btn-sm btn-info btn-block" onClick={this.sortb}>
+                                                B <img className="float-right" src="../logo/sort.svg" height="17px"/>
                                             </button>
                                         </th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>C</button></th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>D</button></th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>A</button></th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>B</button></th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>C</button></th>
-                                        <th className="text-center"><button className="btn btn-sm btn-light" disabled>D </button></th>
+                                        {this.state.more && <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>C</button></th>}
+                                        {this.state.more && <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>D</button></th>}
+                                        <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>A</button></th>
+                                        <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>B</button></th>
+                                        {this.state.more && <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>C</button></th>}
+                                        {this.state.more && <th className="text-center"><button className="btn btn-sm btn-secondary btn-block" disabled>D </button></th>}
                                     </tr>
                                 </thead>
                                 <tbody>{rows}</tbody>
@@ -234,14 +256,13 @@ class CompareCTData extends React.Component{
         return(finalData);
     }
 
-    createDefaultGraph = () => {
-        const ctx = document.getElementById('gainGraph').getContext('2d');
-    
-        ctx.font = "30px Arial";
-        ctx.fillText("Please Select Data", 10, 50);
-    }
 
     CreateGraph(){
+        const graphArea = document.querySelector('.graphArea');
+        const graphBanner = document.querySelector('#graphBanner');
+        graphBanner.style.display = "none";
+        graphArea.style.display = "block";
+
         const graphData = this.createDataset();
         const gain_ctx = document.getElementById('gainGraph').getContext('2d');
         const phase_ctx = document.getElementById('phaseGraph').getContext('2d');

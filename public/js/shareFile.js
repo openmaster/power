@@ -39,6 +39,7 @@ class DownloadNShare extends React.Component{
             data: payload
         }
         axios(request).then(result => {
+            console.log(result)
             const previousSharingResults = this.state.sharingResults || [];
             this.setState({uploading: false, sharingResults: previousSharingResults.concat(result.data)})
         }).catch(err => {
@@ -51,7 +52,7 @@ class DownloadNShare extends React.Component{
     sharingResult(){
         let results = this.state.sharingResults;
         if(results){
-        const items = results.map((item) => <li className="list-group-item" key={item.email.toString()}> &#10025; {item.email} {(item.error)?<span className="text-danger">&#10006; {item.error}</span>:<span>&#10004;</span>}</li>);
+        const items = results.map((item) => <li className="list-group-item" key={item.email.toString()}> &#10025; {item.email} {(item.error)?<span className="text-danger">&#10006; {JSON.stringify(item.error)}</span>:<span>&#10004;</span>}</li>);
             return(
                 <ul className="list-group">
                     {items}
@@ -96,7 +97,7 @@ class DownloadNShare extends React.Component{
         let err = this.state.error;
         let sharingOn = this.state.share;
         if(err){
-            return(<div className="alert alert-danger" role="alert">{err.toString()} <button className="btn btn-sm btn-danger float-right" onClick={()=>this.setState({error: null})}>Ok</button></div>);
+            return(<div className="alert alert-danger" role="alert">{JSON.stringify(err)} <button className="btn btn-sm btn-danger float-right" onClick={()=>this.setState({error: null})}>Ok</button></div>);
         } else {
             return(
                 <div className="container">
